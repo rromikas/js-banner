@@ -20,6 +20,7 @@ function App() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [background, setBackground] = useState("");
 
   const search = new URLSearchParams(window.location.search);
 
@@ -36,6 +37,10 @@ function App() {
         fetch(`${process.env.REACT_APP_API_URL}/questions?orderBy=order,asc`)
           .then((x) => x.json())
           .then((x) => setQuestions(x));
+
+        fetch(`${process.env.REACT_APP_API_URL}/background`)
+          .then((x) => x.json())
+          .then((x) => setBackground(x.color));
 
         fetch(`${process.env.REACT_APP_API_URL}/video`)
           .then((x) => x.json())
@@ -84,8 +89,12 @@ function App() {
               transition ? "transition duration-500" : ""
             }  w-full px-4 pt-4 pb-2 overflow-auto bg-center flex flex-col bg-cover ${
               activeQuestion === i ? "opacity-100" : "opacity-0 pointer-events-none"
-            } ${images ? "" : "bg-green-400"}`}
-            style={images ? { backgroundImage: `url(${q.backgroundImage})` } : {}}
+            }`}
+            style={
+              images
+                ? { backgroundImage: `url(${q.backgroundImage})` }
+                : { backgroundColor: background || "#5095DC" }
+            }
           >
             <img alt="" src={q.backgroundImage} className="hidden" />
             <div className="flex-grow pb-3">
