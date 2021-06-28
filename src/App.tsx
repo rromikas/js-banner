@@ -28,25 +28,27 @@ function App() {
   const size = search.get("size");
   const [width, height] = size ? size.split("x").map((x) => parseInt(x)) : [600, 250];
   const orientation = width > height ? "horizontal" : "vertical";
+  const backgroundImage = search.get("backgroundImage") === "false" ? false : true;
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/questions?orderBy=order,asc`
-        ).then((x) => x.json());
-        setQuestions(res);
+        fetch(`${process.env.REACT_APP_API_URL}/questions?orderBy=order,asc`)
+          .then((x) => x.json())
+          .then((x) => setQuestions(x));
 
-        const res1 = await fetch(`${process.env.REACT_APP_API_URL}/video`).then((x) => x.json());
-        setVideo(res1);
+        fetch(`${process.env.REACT_APP_API_URL}/video`)
+          .then((x) => x.json())
+          .then((x) => setVideo(x));
 
-        const res2 = await fetch(`${process.env.REACT_APP_API_URL}/avatar`).then((x) => x.json());
-        setAvatar(res2.image);
+        fetch(`${process.env.REACT_APP_API_URL}/avatar`)
+          .then((x) => x.json())
+          .then((x) => setAvatar(x.image));
       } catch (error) {
         console.log(error);
       }
     })();
-  }, []);
+  }, [backgroundImage]);
 
   return (
     <div className="flex flex-wrap w-full h-full overflow-auto" style={{ maxWidth: width, height }}>
@@ -82,8 +84,8 @@ function App() {
               transition ? "transition duration-500" : ""
             }  w-full px-4 pt-4 pb-2 overflow-auto bg-center flex flex-col bg-cover ${
               activeQuestion === i ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
-            style={{ backgroundImage: `url(${q.backgroundImage})` }}
+            } ${backgroundImage ? "" : "bg-green-400"}`}
+            style={backgroundImage ? { backgroundImage: `url(${q.backgroundImage})` } : {}}
           >
             <img alt="" src={q.backgroundImage} className="hidden" />
             <div className="flex-grow pb-3">
