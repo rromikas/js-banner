@@ -94,7 +94,7 @@ function App() {
                     style={{ backgroundImage: `url(${avatar})` }}
                   ></div>
                 </div>
-                <div className="bg-black bg-opacity-60 text-lg text-white px-2.5 py-1 rounded">
+                <div className="bg-black bg-opacity-60 text-lg text-white px-2.5 py-1 rounded self-start">
                   {q.question}
                 </div>
               </div>
