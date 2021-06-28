@@ -19,6 +19,15 @@ module.exports = {
           400: "#2AB988",
         },
       },
+      keyframes: {
+        fadein: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
+      animation: {
+        fadein: "fadein 200ms linear forwards",
+      },
     },
   },
   variants: {

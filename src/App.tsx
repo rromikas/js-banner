@@ -21,6 +21,9 @@ function App() {
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
 
+  const transition =
+    new URLSearchParams(window.location.search).get("transition") === "true" ? true : false;
+
   useEffect(() => {
     (async () => {
       try {
@@ -52,7 +55,9 @@ function App() {
         {questions.map((q, i) => (
           <div
             key={`question-${i}`}
-            className={`h-full absolute left-0 top-0 duration-500 w-full px-4 pt-4 pb-2 overflow-auto bg-center flex flex-col bg-cover transition ${
+            className={`h-full absolute left-0 top-0 ${
+              transition ? "transition duration-500" : ""
+            }  w-full px-4 pt-4 pb-2 overflow-auto bg-center flex flex-col bg-cover ${
               activeQuestion === i ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
             style={{ backgroundImage: `url(${q.backgroundImage})` }}
@@ -76,16 +81,16 @@ function App() {
                 <div
                   onClick={() => {
                     let arr = [...answers];
-                    if (arr.length <= activeQuestion) {
+                    if (arr.length <= i) {
                       setAnswers([...arr, a]);
                     } else {
-                      arr[activeQuestion] = a;
+                      arr[i] = a;
                       setAnswers(arr);
                     }
                     setActiveQuestion((prev) => prev + 1);
                   }}
                   className={`${
-                    activeQuestion < answers.length && answers[activeQuestion] === a
+                    i < answers.length && answers[i] === a
                       ? "bg-green-400 text-white"
                       : "bg-green-200 hover:bg-green-201"
                   } cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2`}
@@ -94,7 +99,7 @@ function App() {
                   {a}
                 </div>
               ))}
-              {activeQuestion === questions.length - 1 ? (
+              {i === questions.length - 1 ? (
                 <>
                   <div>
                     <input
@@ -122,7 +127,10 @@ function App() {
                 </>
               ) : null}
               {activeQuestion > 0 ? (
-                <GoBackButton goBack={() => setActiveQuestion((prev) => prev - 1)}></GoBackButton>
+                <GoBackButton
+                  transition={transition}
+                  goBack={() => setActiveQuestion((prev) => prev - 1)}
+                ></GoBackButton>
               ) : null}
             </div>
           </div>
