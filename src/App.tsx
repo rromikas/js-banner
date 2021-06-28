@@ -18,6 +18,7 @@ function App() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -29,6 +30,9 @@ function App() {
 
         const res1 = await fetch(`${process.env.REACT_APP_API_URL}/video`).then((x) => x.json());
         setVideo(res1);
+
+        const res2 = await fetch(`${process.env.REACT_APP_API_URL}/avatar`).then((x) => x.json());
+        setAvatar(res2.image);
       } catch (error) {
         console.log(error);
       }
@@ -39,7 +43,7 @@ function App() {
     <div className="flex max-w-600px w-full h-250px">
       <div className="w-5/12 bg-green-400 flex flex-col">
         <video src={video.url} autoPlay muted loop></video>
-        <div className="flex-grow flex items-center justify-center text-xl font-medium text-white">
+        <div className="flex-grow flex items-center justify-center text-xl font-medium text-white p-4 text-center">
           {video.title}
         </div>
       </div>
@@ -54,7 +58,12 @@ function App() {
           <img src={questions[activeQuestion].backgroundImage} className="hidden" />
           <div className="flex-grow pb-3">
             <div className="flex">
-              <div className="w-42px h-42px rounded-full bg-green-400 flex-shrink-0 mr-3"></div>
+              <div className="w-42px h-42px rounded-full bg-white flex-shrink-0 mr-3">
+                <div
+                  className="w-42px h-42px rounded-full bg-center bg-cover"
+                  style={{ backgroundImage: `url(${avatar})` }}
+                ></div>
+              </div>
               <div className="bg-black bg-opacity-60 text-lg text-white px-2.5 py-1 rounded">
                 {questions[activeQuestion].question}
               </div>
