@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import GoBackButton from "components/GoBackButton";
 
 interface Question {
   question: string;
@@ -47,89 +48,86 @@ function App() {
           {video.title}
         </div>
       </div>
-      {questions.map((q, i) => (
-        <img src={q.backgroundImage} key={`image-prealod-${i}`} className="hidden"></img>
-      ))}
-      {activeQuestion >= questions.length ? null : (
-        <div
-          className={`w-7/12 px-4 pt-4 pb-2 overflow-auto bg-center flex flex-col bg-cover`}
-          style={{ backgroundImage: `url(${questions[activeQuestion].backgroundImage})` }}
-        >
-          <img src={questions[activeQuestion].backgroundImage} className="hidden" />
-          <div className="flex-grow pb-3">
-            <div className="flex">
-              <div className="w-42px h-42px rounded-full bg-white flex-shrink-0 mr-3">
-                <div
-                  className="w-42px h-42px rounded-full bg-center bg-cover"
-                  style={{ backgroundImage: `url(${avatar})` }}
-                ></div>
-              </div>
-              <div className="bg-black bg-opacity-60 text-lg text-white px-2.5 py-1 rounded">
-                {questions[activeQuestion].question}
+      <div className="w-7/12 relative">
+        {questions.map((q, i) => (
+          <div
+            key={`question-${i}`}
+            className={`h-full absolute left-0 top-0 duration-500 w-full px-4 pt-4 pb-2 overflow-auto bg-center flex flex-col bg-cover transition ${
+              activeQuestion === i ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+            style={{ backgroundImage: `url(${q.backgroundImage})` }}
+          >
+            <img alt="" src={q.backgroundImage} className="hidden" />
+            <div className="flex-grow pb-3">
+              <div className="flex">
+                <div className="w-42px h-42px rounded-full bg-white flex-shrink-0 mr-3">
+                  <div
+                    className="w-42px h-42px rounded-full bg-center bg-cover"
+                    style={{ backgroundImage: `url(${avatar})` }}
+                  ></div>
+                </div>
+                <div className="bg-black bg-opacity-60 text-lg text-white px-2.5 py-1 rounded">
+                  {q.question}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex flex-wrap">
-            {questions[activeQuestion].answers.map((a, ai) => (
-              <div
-                onClick={() => {
-                  let arr = [...answers];
-                  if (arr.length <= activeQuestion) {
-                    setAnswers([...arr, a]);
-                  } else {
-                    arr[activeQuestion] = a;
-                    setAnswers(arr);
-                  }
-                  setActiveQuestion((prev) => prev + 1);
-                }}
-                className={`${
-                  activeQuestion < answers.length && answers[activeQuestion] === a
-                    ? "bg-green-400 text-white"
-                    : "bg-green-200 hover:bg-green-201"
-                } cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2`}
-                key={`answer-${ai}`}
-              >
-                {a}
-              </div>
-            ))}
-            {activeQuestion === questions.length - 1 ? (
-              <>
-                <div>
-                  <input
-                    className="border-none outline-none rounded-full h-42px leading-42px px-3 mb-2 mr-2"
-                    placeholder="Enter your email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  ></input>
-                </div>
-                <div>
-                  <input
-                    className="border-none outline-none rounded-full h-42px leading-42px px-3 mb-2 mr-2"
-                    placeholder="Enter your phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  ></input>
-                </div>
+            <div className="flex flex-wrap">
+              {q.answers.map((a, ai) => (
                 <div
-                  onClick={() => {}}
-                  className="bg-green-200 hover:bg-green-201 cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2"
+                  onClick={() => {
+                    let arr = [...answers];
+                    if (arr.length <= activeQuestion) {
+                      setAnswers([...arr, a]);
+                    } else {
+                      arr[activeQuestion] = a;
+                      setAnswers(arr);
+                    }
+                    setActiveQuestion((prev) => prev + 1);
+                  }}
+                  className={`${
+                    activeQuestion < answers.length && answers[activeQuestion] === a
+                      ? "bg-green-400 text-white"
+                      : "bg-green-200 hover:bg-green-201"
+                  } cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2`}
+                  key={`answer-${ai}`}
                 >
-                  Submit
+                  {a}
                 </div>
-              </>
-            ) : null}
-            {activeQuestion > 0 ? (
-              <div
-                onClick={() => setActiveQuestion((prev) => prev - 1)}
-                className="bg-white hover:bg-gray-200 cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2"
-              >
-                Go back
-              </div>
-            ) : null}
+              ))}
+              {activeQuestion === questions.length - 1 ? (
+                <>
+                  <div>
+                    <input
+                      className="border-none outline-none rounded-full h-42px leading-42px px-3 mb-2 mr-2"
+                      placeholder="Enter your email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    ></input>
+                  </div>
+                  <div>
+                    <input
+                      className="border-none outline-none rounded-full h-42px leading-42px px-3 mb-2 mr-2"
+                      placeholder="Enter your phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    ></input>
+                  </div>
+                  <div
+                    onClick={() => {}}
+                    className="bg-green-200 hover:bg-green-201 cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2"
+                  >
+                    Submit
+                  </div>
+                </>
+              ) : null}
+              {activeQuestion > 0 ? (
+                <GoBackButton goBack={() => setActiveQuestion((prev) => prev - 1)}></GoBackButton>
+              ) : null}
+            </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }
