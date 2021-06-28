@@ -21,8 +21,13 @@ function App() {
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
 
-  const transition =
-    new URLSearchParams(window.location.search).get("transition") === "true" ? true : false;
+  const search = new URLSearchParams(window.location.search);
+
+  const title = search.get("title") === "false" ? false : true;
+  const transition = search.get("transition") === "true" ? true : false;
+  const size = search.get("size");
+  const [width, height] = size ? size.split("x").map((x) => parseInt(x)) : [600, 250];
+  const orientation = width > height ? "horizontal" : "vertical";
 
   useEffect(() => {
     (async () => {
@@ -44,14 +49,32 @@ function App() {
   }, []);
 
   return (
-    <div className="flex max-w-600px w-full h-250px">
-      <div className="w-5/12 bg-green-400 flex flex-col">
-        <video src={video.url} autoPlay muted loop></video>
-        <div className="flex-grow flex items-center justify-center text-xl font-medium text-white p-4 text-center">
-          {video.title}
+    <div className="flex flex-wrap w-full h-full overflow-auto" style={{ maxWidth: width, height }}>
+      <div
+        className={`${
+          orientation === "horizontal" ? (width > 700 ? "w-4/12" : "w-5/12") : "w-full h-2/5"
+        } bg-green-400 flex flex-col`}
+      >
+        <div className="relative flex-grow w-full h-0">
+          <video
+            className="object-cover object-center absolute w-full h-full"
+            src={video.url}
+            autoPlay
+            muted
+            loop
+          ></video>
         </div>
+        {title === false ? null : (
+          <div className="h-20 flex items-center justify-center text-xl font-medium text-white p-4 text-center">
+            <span className="line-clamp-2">{video.title}</span>
+          </div>
+        )}
       </div>
-      <div className="w-7/12 relative">
+      <div
+        className={`${
+          orientation === "horizontal" ? (width > 700 ? "w-8/12" : "w-7/12") : "w-full h-3/5"
+        } relative`}
+      >
         {questions.map((q, i) => (
           <div
             key={`question-${i}`}
@@ -93,7 +116,7 @@ function App() {
                     i < answers.length && answers[i] === a
                       ? "bg-green-400 text-white"
                       : "bg-green-200 hover:bg-green-201"
-                  } cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2`}
+                  } cursor-pointer rounded-full select-none h-42px px-5 leading-42px mr-2 mb-2 line-clamp-1`}
                   key={`answer-${ai}`}
                 >
                   {a}

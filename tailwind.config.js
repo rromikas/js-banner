@@ -11,6 +11,7 @@ module.exports = {
     extend: {
       spacing: sizes,
       maxWidth: sizes,
+      minHeight: sizes,
       lineHeight: sizes,
       colors: {
         green: {
@@ -33,5 +34,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };
