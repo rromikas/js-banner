@@ -34,21 +34,19 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        fetch(`${process.env.REACT_APP_API_URL}/questions?orderBy=order,asc`)
+        fetch(`${process.env.REACT_APP_API_URL}/template-1`)
           .then((x) => x.json())
-          .then((x) => setQuestions(x));
-
-        fetch(`${process.env.REACT_APP_API_URL}/background`)
-          .then((x) => x.json())
-          .then((x) => setBackground(x.color));
-
-        fetch(`${process.env.REACT_APP_API_URL}/video`)
-          .then((x) => x.json())
-          .then((x) => setVideo(x));
-
-        fetch(`${process.env.REACT_APP_API_URL}/avatar`)
-          .then((x) => x.json())
-          .then((x) => setAvatar(x.image));
+          .then((x) => {
+            setQuestions(
+              x.questions.map((q: any, i: number) => ({
+                ...q,
+                backgroundImage: x["questions-images"][i],
+              }))
+            );
+            setBackground(x.background);
+            setVideo({ title: x.title, url: x.video });
+            setAvatar(x.avatar);
+          });
       } catch (error) {
         console.log(error);
       }
