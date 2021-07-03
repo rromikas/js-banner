@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        fetch(`${process.env.REACT_APP_API_URL}/template-1`)
+        fetch(`${process.env.REACT_APP_API_URL}/template-1---a1`)
           .then((x) => x.json())
           .then((x) => {
             setQuestions(
