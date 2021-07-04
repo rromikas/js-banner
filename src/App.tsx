@@ -3,7 +3,7 @@ import GoBackButton from "components/GoBackButton";
 
 interface Question {
   question: string;
-  backgroundImage: string;
+  image: string;
   answers: string[];
 }
 
@@ -34,15 +34,10 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        fetch(`${process.env.REACT_APP_API_URL}/template-1---a1`)
+        fetch(`${process.env.REACT_APP_API_URL}/template-1---a1/M82e7YFrDvN2Sg2cAvke`)
           .then((x) => x.json())
           .then((x) => {
-            setQuestions(
-              x.questions.map((q: any, i: number) => ({
-                ...q,
-                backgroundImage: x["questions-images"][i],
-              }))
-            );
+            setQuestions(x.questions);
             setBackground(x.background);
             setVideo({ title: x.title, url: x.video });
             setAvatar(x.avatar);
@@ -90,11 +85,11 @@ function App() {
             }`}
             style={
               images
-                ? { backgroundImage: `url(${q.backgroundImage})` }
+                ? { backgroundImage: `url(${q.image})` }
                 : { backgroundColor: background || "#5095DC" }
             }
           >
-            <img alt="" src={q.backgroundImage} className="hidden" />
+            <img alt="" src={q.image} className="hidden" />
             <div className="flex-grow pb-3">
               <div className="flex">
                 <div className="w-42px h-42px rounded-full bg-white flex-shrink-0 mr-3">
